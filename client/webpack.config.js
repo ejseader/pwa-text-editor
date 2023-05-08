@@ -21,25 +21,29 @@ module.exports = () => {
     plugins: [
       new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'IndexedDB Demo'
+        title: 'JATE - Just Another Text Editor'
       }),
       new MiniCssExtractPlugin(),
       new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
         name: 'PWA Text Editor',
         short_name: 'JATE',
         description: 'A totally cool PWA text editor!',
         background_color: '#ffffff',
-        crossorigin: 'anonymous', //can be null, use-credentials or anonymous
+        start_url: './',
+        publicPath: './',
         icons: [
           {
             src: path.resolve('src/images/logo.png'),
-            sizes: [96, 128, 192, 256, 384, 512, 1024] // multiple sizes
+            sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
+            destination: path.join('assets', 'icons'),
           }
         ]
       }),
       new InjectManifest({
         swSrc: './src-sw.js',
-        swDest: 'service-worker.js',
+        swDest: 'src-sw.js',
       }),
     ],
 
@@ -51,13 +55,12 @@ module.exports = () => {
         },
         {
           test: /\.m?js$/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
-              presets: [
-                ['@babel/preset-env', { targets: "defaults" }]
-              ]
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             }
           }
         }

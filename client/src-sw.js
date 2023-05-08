@@ -28,11 +28,16 @@ registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching (how to setup asset caching through workbox) X
 registerRoute(({ request }) => ['style', 'script', 'worker'].includes(request.destination), 
-new StaleWhileRevalidate({
+new CacheFirst({
   cacheName: 'asset-cache',
   plugins: [
     new CacheableResponsePlugin({
       statuses: [0, 200],
     }),
+    new ExpirationPlugin({
+      maxEntries: 60, 
+      maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+    })
   ],
-}));
+})
+);
