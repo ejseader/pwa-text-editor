@@ -42,8 +42,8 @@ export const getDb = async () => {
   const request = store.get(1);
 
   const result = await request;
-  console.log('result.value', result);
-  return result.value;
+  console.log('result.value', result.value);
+  return result ? result.value : null;
 };
 
 initdb();
